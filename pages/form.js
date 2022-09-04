@@ -5,21 +5,23 @@ import {FormContainer, TextFieldElement,useForm,CheckboxElement,me} from 'react-
 import { Stack } from '@mui/system'
 import * as FormData  from 'form-data'
 const axios = require('axios').default;
+import {useRouter} from 'next/router'
 
 
-
-export default function Home({data}) {
-
+export default function Home() {
+const router=useRouter();
 
 const Form=() => {
   const {register,control, handleSubmit} = useForm({
-      defaultValues:{...data}
+    defaultValues:{
+'Status':true
+    }
   })
  
   const onSubmit = async (data1) => {
        // data1['Status']=true
 data1['Resume']=data1.Resume[0]
-axios.put(`http://localhost:8000/person/${data1.id}/update/`,
+axios.post(`http://localhost:8000/person/`,
           data1, {
             headers: {
               'Content-Type': 'multipart/form-data'
@@ -27,6 +29,7 @@ axios.put(`http://localhost:8000/person/${data1.id}/update/`,
           }
         ).then(function () {
           console.log('SUCCESS!!');
+router.push('/');
         })
         .catch(function () {
           console.log('FAILURE!!',data1);
@@ -45,39 +48,43 @@ axios.put(`http://localhost:8000/person/${data1.id}/update/`,
 //       }
 };
 
+
   return (
 
           <form onSubmit={handleSubmit(onSubmit)} noValidate>
 
 
-              <TextFieldElement name={'Fname'} label={'First Name'} control={control} fullWidth/><br/><br/>
+              <TextFieldElement required name={'Fname'} label={'First Name'} control={control} fullWidth/><br/><br/>
 
-              <TextFieldElement  name={'Lname'} label={'Last Name'} control={control} fullWidth/><br/><br/>
+              <TextFieldElement required  name={'Lname'} label={'Last Name'} control={control} fullWidth/><br/><br/>
 
               
 
-              <TextFieldElement  name={'Email'} label={'Email'} control={control} fullWidth/><br/><br/>
-              <TextFieldElement  name={'Contact_Number'} label={'Contact'} control={control} fullWidth/><br/><br/>
+              <TextFieldElement required  name={'Email'} label={'Email'} control={control} fullWidth/><br/><br/>
+              <TextFieldElement required name={'Contact_Number'} label={'Contact'} control={control} fullWidth/><br/><br/>
             
 
-              <TextFieldElement name={'About'}  multiline   label={'About'} control={control} fullWidth/><br/><br/>
+              <TextFieldElement  name={'About'}  multiline   label={'About'} control={control} fullWidth/><br/><br/>
 
               <TextFieldElement name={'Experience'}  multiline   label={'Experience'} control={control} fullWidth/><br/><br/>
 
               <TextFieldElement name={'Educational_details'}  multiline   label={'Educational_details'} control={control} fullWidth/><br/><br/>
-<CheckboxElement name={"Status"} control={control}></CheckboxElement>
+<CheckboxElement name={"Status"} defaultChecked={true} label={'accept'} control={control}></CheckboxElement> <br></br>
               <Button
-  variant="contained"
+  variant="outlined"
   component="label"
 >
   Resume Upload
   <input
     type="file"
     {...register('Resume')}
-
+hidden
   />
-</Button>
-                <Button type={'submit'} color={'primary'}>Submit</Button>
+</Button> <br></br>
+<Box sx={{minHeight:10}}>
+
+</Box>
+                <Button fullWidth  variant="contained" type={'submit'} color={'primary'}>Submit</Button>
           </form>
 
   )
@@ -87,7 +94,7 @@ axios.put(`http://localhost:8000/person/${data1.id}/update/`,
     < >
      
 
-  <Box  sx={{m:20}}>
+  <Box  sx={{ m:2,mt:15}}>
      <Form></Form>
 
        </Box>
@@ -98,15 +105,4 @@ axios.put(`http://localhost:8000/person/${data1.id}/update/`,
     </>
   )
 }
-export async function getServerSideProps() {
-  // Fetch data from external API
-  const default_data={"Fname":"","Lname":"","Contact_Number":"","Email":"","Status":true,"About":'',"Experience":'',"Educational_details":
-  "I have worked on projects of this scale which makes me perfect fit for this role. please do consider me",
-  "Resume":null,
-  "id":6}
-  const res = await fetch(`http://localhost:8000/person/6/`)
-  const data = await res.json()
 
-  // Pass data to the page via props
-  return { props: { data } }
-}
