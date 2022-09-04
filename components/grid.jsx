@@ -2,7 +2,7 @@ import * as React from 'react';
 import { experimentalStyled as styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
-import Grid from '@mui/material/Grid';
+import Grid from '@mui/material/Unstable_Grid2';
 import Fab from '@mui/material/Fab';
 import AddIcon from '@mui/icons-material/Add';
 
@@ -33,16 +33,15 @@ const data={
   'Educational_details':'4 star @Codechef | Python | Django | Next JS',
   'Experience':"I have worked on projects of this scale which makes me perfect fit for this role. please do consider me"
 }
-export default function ResponsiveGrid() {
+export default function ResponsiveGrid({data}) {
   return (
-    <Box sx={{ flexGrow: 1 ,mt:10}}>
+    <Box sx={{  m:10}}>
      
-      <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
-        {Array.from(Array(8)).map((_, index) => (
+      <Grid container spacing={{ xs: 2, md: 3 }} display="flex" justifyContent="center" alignItems="center" >
+        {data.map((item, index) => (
           <Grid item xs={2} sm={4} md={4} key={index}>
-            <Item>
-              <Card data={data}></Card>
-            </Item>
+              <Card data={item}></Card>
+
           </Grid>
         ))}
       </Grid>

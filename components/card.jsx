@@ -2,7 +2,7 @@ import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import Card from '@mui/material/Card';
 import CardHeader from '@mui/material/CardHeader';
-import {Box} from '@mui/material';
+import {Box,Button,Stack} from '@mui/material';
 import CardContent from '@mui/material/CardContent';
 import CardActions from '@mui/material/CardActions';
 import Collapse from '@mui/material/Collapse';
@@ -31,16 +31,17 @@ const ExpandMore = styled((props) => {
 
 export default function RecipeReviewCard(props) {
   const [expanded, setExpanded] = React.useState(false);
+  const[status,setStatus]=React.useState(props.data.Status)
 
   const handleExpandClick = () => {
     setExpanded(!expanded);
   };
 
   return (
-    <Card sx={{ maxWidth: 345 }}>
+    <Card sx={{borderColor:"black",borderWidth:2, minWidth: 345,minHeight:200 }}>
       <CardHeader
         avatar={
-          <Avatar sx={{ bgcolor: ((props.data.Status)?green[500]:red[500]) }} aria-label="recipe">
+          <Avatar sx={{ bgcolor: ((status)?green[500]:red[500]) }} aria-label="recipe">
             {`${props.data.Fname[0]}${props.data.Lname[0]}`}
           </Avatar>
         }
@@ -49,21 +50,25 @@ export default function RecipeReviewCard(props) {
         subheader={props.data.Educational_details}
         
       />
-
-      
+    
       <CardContent>
+      
         <Typography variant="body2" color="text.secondary">
          {props.data.Experience}
         </Typography>
       </CardContent>
 
       <CardActions disableSpacing>
-        <IconButton aria-label="add to favorites">
-          <FavoriteIcon />
-        </IconButton>
-        <IconButton aria-label="share">
-          <ShareIcon />
-        </IconButton>
+
+<Stack direction="row" justifyContent="space-around" spacing={1} sx={{ mb: 1 }}>
+ 
+        <Button  variant="outlined">
+          {status?"Reject":"Accept"}
+        </Button>
+        <Button  variant="outlined">
+          Edit
+        </Button>
+        </Stack>
         <ExpandMore
           expand={expanded}
           onClick={handleExpandClick}
@@ -73,6 +78,7 @@ export default function RecipeReviewCard(props) {
           <ExpandMoreIcon />
         </ExpandMore>
       </CardActions>
+      
       <Collapse in={expanded} timeout="auto" unmountOnExit>
         <CardContent>
           <Box sx={{m:2}}>
@@ -89,6 +95,7 @@ export default function RecipeReviewCard(props) {
          </Box>
         </CardContent>
       </Collapse>
+     
     </Card>
   );
 }
